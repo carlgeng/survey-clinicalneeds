@@ -1,0 +1,10 @@
+body { font-family: Arial, sans-serif; margin: 50px; }
+label { display: block; margin: 10px 0; }
+input[type="text"], input[type="tel"], input[type="email"] { width: 200px; padding: 5px; }
+select { padding: 5px; }
+button { margin: 10px 5px 0 0; padding: 10px; }
+.field-container { display: flex; align-items: center; }
+.field-container input[type="checkbox"] { margin-left: 10px; }
+.phone-container { display: flex; align-items: center; }
+.error { color: red; font-size: 0.9em; }
+.flag { width: 16px; height: 12px; margin-right: 5px; vertical-align: middle; }
