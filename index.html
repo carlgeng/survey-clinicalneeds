@@ -7,27 +7,43 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 50px; }
         label { display: block; margin: 10px 0; }
-        input { width: 200px; padding: 5px; }
-        button { margin-top: 10px; padding: 10px; }
+        input[type="text"], input[type="tel"] { width: 200px; padding: 5px; }
+        button { margin: 10px 5px 0 0; padding: 10px; }
+        .field-container { display: flex; align-items: center; }
+        .field-container input[type="checkbox"] { margin-left: 10px; }
     </style>
 </head>
 <body>
     <h1>请输入用户信息</h1>
     <form id="userForm">
-        <label>姓名: <input type="text" id="name" required></label>
-        <label>电话: <input type="tel" id="phone" required></label>
-        <label>工作信息: <input type="text" id="job" required></label>
+        <div id="defaultFields">
+            <div class="field-container">
+                <label>姓名: <input type="text" id="name" required></label>
+                <label><input type="checkbox" id="name_onchain" checked> 上链</label>
+            </div>
+            <div class="field-container">
+                <label>电话: <input type="tel" id="phone" required></label>
+                <label><input type="checkbox" id="phone_onchain" checked> 上链</label>
+            </div>
+            <div class="field-container">
+                <label>工作信息: <input type="text" id="job" required></label>
+                <label><input type="checkbox" id="job_onchain" checked> 上链</label>
+            </div>
+        </div>
+        <div id="customFields"></div>
         <button type="submit">提交</button>
     </form>
     <p id="message"></p>
 
-    <!-- Firebase 逻辑使用模块化方式 -->
-    <script type="module">
-        // 导入 Firebase 模块
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    <h2>添加新字段</h2>
+    <input type="text" id="newFieldName" placeholder="输入新字段名">
+    <button id="addFieldBtn">添加字段</button>
+    <p id="fieldMessage"></p>
 
-        // Firebase 配置
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, set, onValue, push, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
         const firebaseConfig = {
             apiKey: "AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
             authDomain: "survey-for-clinical-needs.firebaseapp.com",
@@ -38,30 +54,96 @@
             appId: "1:589958428208:web:d1710da5dab033c5535ff5"
         };
 
-        // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+
+        // 加载自定义字段
+        function loadCustomFields() {
+            const customFieldsDiv = document.getElementById('customFields');
+            customFieldsDiv.innerHTML = '';
+            onValue(ref(database, 'fields'), (snapshot) => {
+                const fields = snapshot.val() || {};
+                for (let key in fields) {
+                    const fieldName = fields[key].name;
+                    const fieldId = fieldName.replace(/\s+/g, '_').toLowerCase();
+                    const div = document.createElement('div');
+                    div.className = 'field-container';
+                    div.innerHTML = `
+                        <label>${fieldName}: <input type="text" id="${fieldId}" required></label>
+                        <label><input type="checkbox" id="${fieldId}_onchain" checked> 上链</label>
+                    `;
+                    customFieldsDiv.appendChild(div);
+                }
+            });
+        }
+
+        // 添加新字段
+        document.getElementById('addFieldBtn').addEventListener('click', () => {
+            const newFieldNameInput = document.getElementById('newFieldName');
+            const fieldName = newFieldNameInput.value.trim();
+            const fieldMessage = document.getElementById('fieldMessage');
+
+            if (!fieldName) {
+                fieldMessage.textContent = '字段名不能为空！';
+                return;
+            }
+
+            get(ref(database, 'fields')).then((snapshot) => {
+                const fields = snapshot.val() || {};
+                const fieldCount = Object.keys(fields).length;
+
+                if (fieldCount >= 5) {
+                    fieldMessage.textContent = '最多只能添加5个字段！';
+                } else {
+                    push(ref(database, 'fields'), { name: fieldName })
+                        .then(() => {
+                            fieldMessage.textContent = '字段添加成功！';
+                            newFieldNameInput.value = '';
+                            loadCustomFields(); // 刷新字段列表
+                        })
+                        .catch((error) => {
+                            fieldMessage.textContent = '添加失败：' + error.message;
+                        });
+                }
+            });
+        });
 
         // 表单提交逻辑
         document.getElementById('userForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const job = document.getElementById('job').value;
-
-            // 保存到 Firebase
-            set(ref(database, 'users/' + Date.now()), {
-                name: name,
-                phone: phone,
-                job: job
-            }).then(() => {
-                document.getElementById('message').textContent = '信息已成功保存！';
-                document.getElementById('userForm').reset();
-            }).catch((error) => {
-                document.getElementById('message').textContent = '保存失败：' + error.message;
+            const data = {};
+            const defaultFields = ['name', 'phone', 'job'];
+            defaultFields.forEach(field => {
+                data[field] = {
+                    value: document.getElementById(field).value,
+                    onChain: document.getElementById(`${field}_onchain`).checked
+                };
             });
+
+            const customFieldsDiv = document.getElementById('customFields');
+            customFieldsDiv.querySelectorAll('input[type="text"]').forEach(input => {
+                const fieldId = input.id;
+                const fieldName = fieldId.replace(/_/g, ' ');
+                data[fieldId] = {
+                    value: input.value,
+                    onChain: document.getElementById(`${fieldId}_onchain`).checked
+                };
+            });
+
+            set(ref(database, 'users/' + Date.now()), data)
+                .then(() => {
+                    document.getElementById('message').textContent = '信息已成功保存！';
+                    document.getElementById('userForm').reset();
+                    loadCustomFields(); // 重置后重新加载字段
+                })
+                .catch((error) => {
+                    document.getElementById('message').textContent = '保存失败：' + error.message;
+                });
         });
+
+        // 页面加载时初始化自定义字段
+        loadCustomFields();
     </script>
 </body>
 </html>
