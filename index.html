@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    <h1>输入用户信息</h1>
+    <h1>请输入用户信息</h1>
     <form id="userForm">
         <label>姓名: <input type="text" id="name" required></label>
         <label>电话: <input type="tel" id="phone" required></label>
@@ -29,14 +29,14 @@
     <script>
         // Firebase 配置（替换为您的实际配置）
         const firebaseConfig = {
-            apiKey: AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
-            authDomain: "survey-for-clinical-needs.firebaseapp.com",
-            databaseURL: "https://survey-for-clinical-needs.firebaseio.com",
-            projectId: "survey-for-clinical-needs",
-            storageBucket: "survey-for-clinical-needs.appspot.com",
-            messagingSenderId: "589958428208",
-            appId: "1:589958428208:web:682b8d373d70df61535ff5"
-        };
+              apiKey: "AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
+              authDomain: "survey-for-clinical-needs.firebaseapp.com",
+              databaseURL: "https://survey-for-clinical-needs-default-rtdb.asia-southeast1.firebasedatabase.app",
+              projectId: "survey-for-clinical-needs",
+              storageBucket: "survey-for-clinical-needs.firebasestorage.app",
+              messagingSenderId: "589958428208",
+              appId: "1:589958428208:web:d1710da5dab033c5535ff5"
+            };
 
         // 初始化 Firebase
         firebase.initializeApp(firebaseConfig);
