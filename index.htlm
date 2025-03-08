@@ -35,7 +35,7 @@
             projectId: "survey-for-clinical-needs",
             storageBucket: "survey-for-clinical-needs.appspot.com",
             messagingSenderId: "589958428208",
-            appId: "1:909261573107:web:f903532e35061cae03a086"
+            appId: "1:589958428208:web:682b8d373d70df61535ff5"
         };
 
         // 初始化 Firebase
