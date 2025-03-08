@@ -29,12 +29,12 @@
     <script>
         // Firebase 配置（替换为您的实际配置）
         const firebaseConfig = {
-            apiKey: "AIzaSyBdBOEkyKLwcjBngPTKyN4FwXefmpEX0kk",
-            authDomain: "blockchain-8b4c8.firebaseapp.com",
-            databaseURL: "https://blockchain-8b4c8.firebaseio.com",
-            projectId: "blockchain-8b4c8",
-            storageBucket: "blockchain-8b4c8.appspot.com",
-            messagingSenderId: "909261573107",
+            apiKey: AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
+            authDomain: "survey-for-clinical-needs.firebaseapp.com",
+            databaseURL: "https://survey-for-clinical-needs.firebaseio.com",
+            projectId: "survey-for-clinical-needs",
+            storageBucket: "survey-for-clinical-needs.appspot.com",
+            messagingSenderId: "589958428208",
             appId: "1:909261573107:web:f903532e35061cae03a086"
         };
 
