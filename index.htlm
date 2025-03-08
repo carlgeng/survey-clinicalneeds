@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户信息输入</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        label { display: block; margin: 10px 0; }
+        input { width: 200px; padding: 5px; }
+        button { margin-top: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>输入用户信息</h1>
+    <form id="userForm">
+        <label>姓名: <input type="text" id="name" required></label>
+        <label>电话: <input type="tel" id="phone" required></label>
+        <label>工作信息: <input type="text" id="job" required></label>
+        <button type="submit">提交</button>
+    </form>
+    <p id="message"></p>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <!-- 下一步将添加 Firebase 配置和逻辑 -->
+</body>
+</html>
