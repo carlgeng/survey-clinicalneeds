@@ -21,38 +21,37 @@
     </form>
     <p id="message"></p>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  
-    <!-- Firebase 配置和逻辑 -->
-    <script>
-        // Firebase 配置（替换为您的实际配置）
+    <!-- Firebase 逻辑使用模块化方式 -->
+    <script type="module">
+        // 导入 Firebase 模块
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        // Firebase 配置
         const firebaseConfig = {
-              apiKey: "AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
-              authDomain: "survey-for-clinical-needs.firebaseapp.com",
-              databaseURL: "https://survey-for-clinical-needs-default-rtdb.asia-southeast1.firebasedatabase.app",
-              projectId: "survey-for-clinical-needs",
-              storageBucket: "survey-for-clinical-needs.firebasestorage.app",
-              messagingSenderId: "589958428208",
-              appId: "1:589958428208:web:d1710da5dab033c5535ff5"
-            };
+            apiKey: "AIzaSyAugtCukOXzXcAkRN64YMYTTceEcwQWzFI",
+            authDomain: "survey-for-clinical-needs.firebaseapp.com",
+            databaseURL: "https://survey-for-clinical-needs-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "survey-for-clinical-needs",
+            storageBucket: "survey-for-clinical-needs.firebasestorage.app",
+            messagingSenderId: "589958428208",
+            appId: "1:589958428208:web:d1710da5dab033c5535ff5"
+        };
 
         // 初始化 Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
         // 表单提交逻辑
         document.getElementById('userForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // 获取输入值
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const job = document.getElementById('job').value;
 
             // 保存到 Firebase
-            database.ref('users/' + Date.now()).set({
+            set(ref(database, 'users/' + Date.now()), {
                 name: name,
                 phone: phone,
                 job: job
