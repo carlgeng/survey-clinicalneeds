@@ -15,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 let phoneRules = [];
-fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/main/phoneRules.json')
+fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/heads/main/phoneRules.json')
     .then(response => {
         if (!response.ok) throw new Error('无法加载 phoneRules.json: ' + response.status);
         return response.json();
