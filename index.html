@@ -14,6 +14,7 @@
         .field-container input[type="checkbox"] { margin-left: 10px; }
         .phone-container { display: flex; align-items: center; }
         .error { color: red; font-size: 0.9em; }
+        .flag { width: 16px; height: 12px; margin-right: 5px; vertical-align: middle; }
     </style>
 </head>
 <body>
@@ -73,7 +74,7 @@
 
         // 加载 phoneRules.json
         let phoneRules = [];
-        fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/heads/main/phoneRules.json')
+        fetch('https://raw.githubusercontent.com/您的用户名/survey-repo/main/phoneRules.json')
             .then(response => {
                 if (!response.ok) throw new Error('无法加载 phoneRules.json: ' + response.status);
                 return response.json();
@@ -87,13 +88,13 @@
                 document.getElementById('message').textContent = '电话规则加载失败，请稍后重试';
             });
 
-        // 动态生成国家码下拉菜单
+        // 动态生成国家码下拉菜单并显示国旗
         const countryCodeSelect = document.getElementById('countryCode');
         function populateCountryCodes() {
             phoneRules.forEach(rule => {
                 const option = document.createElement('option');
                 option.value = rule.countryCode;
-                option.textContent = `${rule.countryCode} (${rule.countryName})`;
+                option.innerHTML = `<img src="${rule.flag}" class="flag">${rule.countryCode} (${rule.countryName})`;
                 countryCodeSelect.appendChild(option);
             });
         }
