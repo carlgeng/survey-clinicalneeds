@@ -74,7 +74,7 @@
 
         // 加载 phoneRules.json
         let phoneRules = [];
-        fetch('https://github.com/carlgeng/survey-clinicalneeds/blob/main/phoneRules.json')
+        fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/heads/main/phoneRules.json')
             .then(response => {
                 if (!response.ok) throw new Error('无法加载 phoneRules.json: ' + response.status);
                 return response.json();
