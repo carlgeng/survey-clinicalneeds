@@ -7,10 +7,13 @@
     <style>
         body { font-family: Arial, sans-serif; margin: 50px; }
         label { display: block; margin: 10px 0; }
-        input[type="text"], input[type="tel"] { width: 200px; padding: 5px; }
+        input[type="text"], input[type="tel"], input[type="email"] { width: 200px; padding: 5px; }
+        select { padding: 5px; }
         button { margin: 10px 5px 0 0; padding: 10px; }
         .field-container { display: flex; align-items: center; }
         .field-container input[type="checkbox"] { margin-left: 10px; }
+        .phone-container { display: flex; align-items: center; }
+        .error { color: red; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -22,8 +25,19 @@
                 <label><input type="checkbox" id="name_onchain" checked> 上链</label>
             </div>
             <div class="field-container">
-                <label>电话: <input type="tel" id="phone" required></label>
+                <label>电话: 
+                    <div class="phone-container">
+                        <select id="countryCode"></select>
+                        <input type="tel" id="phone" required>
+                    </div>
+                </label>
                 <label><input type="checkbox" id="phone_onchain" checked> 上链</label>
+                <span id="phone_error" class="error"></span>
+            </div>
+            <div class="field-container">
+                <label>邮件地址: <input type="email" id="email" required></label>
+                <label><input type="checkbox" id="email_onchain" checked> 上链</label>
+                <span id="email_error" class="error"></span>
             </div>
             <div class="field-container">
                 <label>工作信息: <input type="text" id="job" required></label>
@@ -56,6 +70,27 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+
+        // 加载 phoneRules.json
+        let phoneRules = [];
+        fetch('https://raw.githubusercontent.com/您的用户名/survey-repo/main/phoneRules.json')
+            .then(response => response.json())
+            .then(data => {
+                phoneRules = data;
+                populateCountryCodes();
+            })
+            .catch(error => console.error('加载 phoneRules.json 失败:', error));
+
+        // 动态生成国家码下拉菜单
+        const countryCodeSelect = document.getElementById('countryCode');
+        function populateCountryCodes() {
+            phoneRules.forEach(rule => {
+                const option = document.createElement('option');
+                option.value = rule.countryCode;
+                option.textContent = `${rule.countryCode} (${rule.countryName})`;
+                countryCodeSelect.appendChild(option);
+            });
+        }
 
         // 加载自定义字段
         function loadCustomFields() {
@@ -99,7 +134,7 @@
                         .then(() => {
                             fieldMessage.textContent = '字段添加成功！';
                             newFieldNameInput.value = '';
-                            loadCustomFields(); // 刷新字段列表
+                            loadCustomFields();
                         })
                         .catch((error) => {
                             fieldMessage.textContent = '添加失败：' + error.message;
@@ -108,23 +143,114 @@
             });
         });
 
-        // 表单提交逻辑
-        document.getElementById('userForm').addEventListener('submit', function(e) {
+        // 输入验证
+        const phoneInput = document.getElementById('phone');
+        const emailInput = document.getElementById('email');
+        const phoneError = document.getElementById('phone_error');
+        const emailError = document.getElementById('email_error');
+
+        phoneInput.addEventListener('input', () => {
+            const countryCode = countryCodeSelect.value;
+            const rule = phoneRules.find(r => r.countryCode === countryCode);
+            const phone = phoneInput.value;
+            let isValid = false;
+
+            if (!rule) return; // 等待 phoneRules 加载
+            if (Array.isArray(rule.phoneLength)) {
+                isValid = rule.phoneLength.some(len => phone.length === len) && new RegExp(rule.pattern).test(phone);
+            } else {
+                isValid = phone.length === rule.phoneLength && new RegExp(rule.pattern).test(phone);
+            }
+
+            if (!isValid) {
+                phoneError.textContent = `请输入${Array.isArray(rule.phoneLength) ? rule.phoneLength.join('-') : rule.phoneLength}位有效号码（${rule.cityCode ? '含城市码 ' + rule.cityCode : '无城市码'}）`;
+            } else {
+                phoneError.textContent = '';
+            }
+        });
+
+        emailInput.addEventListener('input', () => {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput.value)) {
+                emailError.textContent = '请输入有效的邮箱地址';
+            } else {
+                emailError.textContent = '';
+            }
+        });
+
+        // 检查唯一性并提交
+        document.getElementById('userForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const countryCode = countryCodeSelect.value;
+            const phone = phoneInput.value;
+            const email = emailInput.value;
+            const fullPhone = countryCode + phone;
+            const rule = phoneRules.find(r => r.countryCode === countryCode);
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let isPhoneValid = false;
+
+            if (!rule) {
+                document.getElementById('message').textContent = '电话规则未加载';
+                return;
+            }
+            if (Array.isArray(rule.phoneLength)) {
+                isPhoneValid = rule.phoneLength.some(len => phone.length === len) && new RegExp(rule.pattern).test(phone);
+            } else {
+                isPhoneValid = phone.length === rule.phoneLength && new RegExp(rule.pattern).test(phone);
+            }
+
+            if (!isPhoneValid) {
+                document.getElementById('message').textContent = '电话号码格式错误';
+                return;
+            }
+            if (!emailPattern.test(email)) {
+                document.getElementById('message').textContent = '邮件地址格式错误';
+                return;
+            }
+
+            // 检查唯一性
+            const usersRef = ref(database, 'users');
+            const snapshot = await get(usersRef);
+            const users = snapshot.val() || {};
+            let phoneExists = false;
+            let emailExists = false;
+
+            for (let key in users) {
+                const user = users[key];
+                if (user.phone && user.phone.value === fullPhone) phoneExists = true;
+                if (user.email && user.email.value === email) emailExists = true;
+            }
+
+            if (phoneExists) {
+                document.getElementById('message').textContent = '电话号码已存在';
+                return;
+            }
+            if (emailExists) {
+                document.getElementById('message').textContent = '邮件地址已存在';
+                return;
+            }
+
+            // 提交数据
             const data = {};
-            const defaultFields = ['name', 'phone', 'job'];
+            const defaultFields = ['name', 'phone', 'email', 'job'];
             defaultFields.forEach(field => {
-                data[field] = {
-                    value: document.getElementById(field).value,
-                    onChain: document.getElementById(`${field}_onchain`).checked
-                };
+                if (field === 'phone') {
+                    data[field] = {
+                        value: fullPhone,
+                        onChain: document.getElementById(`${field}_onchain`).checked
+                    };
+                } else {
+                    data[field] = {
+                        value: document.getElementById(field).value,
+                        onChain: document.getElementById(`${field}_onchain`).checked
+                    };
+                }
             });
 
             const customFieldsDiv = document.getElementById('customFields');
             customFieldsDiv.querySelectorAll('input[type="text"]').forEach(input => {
                 const fieldId = input.id;
-                const fieldName = fieldId.replace(/_/g, ' ');
                 data[fieldId] = {
                     value: input.value,
                     onChain: document.getElementById(`${fieldId}_onchain`).checked
@@ -135,7 +261,7 @@
                 .then(() => {
                     document.getElementById('message').textContent = '信息已成功保存！';
                     document.getElementById('userForm').reset();
-                    loadCustomFields(); // 重置后重新加载字段
+                    loadCustomFields();
                 })
                 .catch((error) => {
                     document.getElementById('message').textContent = '保存失败：' + error.message;
