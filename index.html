@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; font-src 'self' data: https://carlgeng.github.io; img-src 'self' https://flagcdn.com; connect-src 'self' https://raw.githubusercontent.com https://survey-for-clinical-needs-default-rtdb.asia-southeast1.firebasedatabase.app;">
     <title>用户信息输入</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 50px; }
@@ -18,7 +19,7 @@
     </style>
 </head>
 <body>
-    <h1>请输入用户信息</h1>
+    <h1>输入用户信息</h1>
     <form id="userForm">
         <div id="defaultFields">
             <div class="field-container">
@@ -74,7 +75,7 @@
 
         // 加载 phoneRules.json
         let phoneRules = [];
-        fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/heads/main/phoneRules.json')
+        fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/main/phoneRules.json')
             .then(response => {
                 if (!response.ok) throw new Error('无法加载 phoneRules.json: ' + response.status);
                 return response.json();
