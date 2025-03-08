@@ -74,12 +74,18 @@
         // 加载 phoneRules.json
         let phoneRules = [];
         fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/heads/main/phoneRules.json')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error('无法加载 phoneRules.json: ' + response.status);
+                return response.json();
+            })
             .then(data => {
                 phoneRules = data;
                 populateCountryCodes();
             })
-            .catch(error => console.error('加载 phoneRules.json 失败:', error));
+            .catch(error => {
+                console.error('加载 phoneRules.json 失败:', error);
+                document.getElementById('message').textContent = '电话规则加载失败，请稍后重试';
+            });
 
         // 动态生成国家码下拉菜单
         const countryCodeSelect = document.getElementById('countryCode');
