@@ -7,25 +7,28 @@
       default-src 'self';
       script-src 'self' https://www.gstatic.com https://cdn.firebase.com https://*.firebasedatabase.app;
       connect-src 'self' https://*.firebasedatabase.app wss://*.firebasedatabase.app https://raw.githubusercontent.com;
-      font-src 'self' data:;
+      font-src 'self' data: https://fonts.gstatic.com;
       img-src 'self' https://flagcdn.com;
+      style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
     ">
     <title>用户信息输入</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h1>请输入用户信息</h1>
+    <h1><i class="fas fa-user-edit"></i> 输入用户信息</h1>
     <form id="userForm">
         <div id="defaultFields">
             <div class="field-container">
-                <label>姓名: <input type="text" id="name" required></label>
+                <label><i class="fas fa-user"></i> 姓名: <input type="text" id="name" required></label>
                 <label><input type="checkbox" id="name_onchain" checked> 上链</label>
             </div>
             <div class="field-container">
                 <label>电话: 
                     <div class="phone-container">
                         <div id="countryCodeDropdown" class="dropdown">
-                            <div id="selectedCountry" class="selected">选择国家代码</div>
+                            <div id="selectedCountry" class="selected"><i class="fas fa-globe"></i> 选择国家代码</div>
                             <ul id="countryList" class="country-list hidden"></ul>
                         </div>
                         <input type="tel" id="phone" required>
@@ -35,23 +38,23 @@
                 <span id="phone_error" class="error"></span>
             </div>
             <div class="field-container">
-                <label>邮件地址: <input type="email" id="email" required></label>
+                <label><i class="fas fa-envelope"></i> 邮件地址: <input type="email" id="email" required></label>
                 <label><input type="checkbox" id="email_onchain" checked> 上链</label>
                 <span id="email_error" class="error"></span>
             </div>
             <div class="field-container">
-                <label>工作信息: <input type="text" id="job" required></label>
+                <label><i class="fas fa-briefcase"></i> 工作信息: <input type="text" id="job" required></label>
                 <label><input type="checkbox" id="job_onchain" checked> 上链</label>
             </div>
         </div>
         <div id="customFields"></div>
-        <button type="submit">提交</button>
+        <button type="submit"><i class="fas fa-check"></i> 提交</button>
     </form>
     <p id="message"></p>
 
-    <h2>添加新字段</h2>
+    <h2><i class="fas fa-plus-circle"></i> 添加新字段</h2>
     <input type="text" id="newFieldName" placeholder="输入新字段名">
-    <button id="addFieldBtn">添加字段</button>
+    <button id="addFieldBtn"><i class="fas fa-plus"></i> 添加字段</button>
     <p id="fieldMessage"></p>
 
     <script type="module" src="script.js"></script>
