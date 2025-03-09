@@ -29,14 +29,34 @@ fetch('https://raw.githubusercontent.com/carlgeng/survey-clinicalneeds/refs/head
         document.getElementById('message').textContent = '电话规则加载失败，请稍后重试';
     });
 
-const countryCodeSelect = document.getElementById('countryCode');
+let selectedCountryCode = null;
+const dropdown = document.getElementById('countryCodeDropdown');
+const selectedCountry = document.getElementById('selectedCountry');
+const countryList = document.getElementById('countryList');
+
 function populateCountryCodes() {
+    countryList.innerHTML = '';
     phoneRules.forEach(rule => {
-        const option = document.createElement('option');
-        option.value = rule.countryCode;
-        option.innerHTML = `<img src="${rule.flag}" class="flag">${rule.countryCode} (${rule.countryName})`;
-        countryCodeSelect.appendChild(option);
+        const li = document.createElement('li');
+        li.innerHTML = `<img src="${rule.flag}" class="flag">${rule.countryCode} (${rule.countryName})`;
+        li.dataset.value = rule.countryCode;
+        li.addEventListener('click', () => {
+            selectedCountry.innerHTML = `<img src="${rule.flag}" class="flag">${rule.countryCode}`;
+            selectedCountryCode = rule.countryCode;
+            countryList.classList.add('hidden');
+        });
+        countryList.appendChild(li);
     });
+
+    selectedCountry.addEventListener('click', () => {
+        countryList.classList.toggle('hidden');
+    });
+
+    // Default to first country if available
+    if (phoneRules.length > 0) {
+        selectedCountry.innerHTML = `<img src="${phoneRules[0].flag}" class="flag">${phoneRules[0].countryCode}`;
+        selectedCountryCode = phoneRules[0].countryCode;
+    }
 }
 
 function loadCustomFields() {
@@ -94,8 +114,7 @@ const phoneError = document.getElementById('phone_error');
 const emailError = document.getElementById('email_error');
 
 phoneInput.addEventListener('input', () => {
-    const countryCode = countryCodeSelect.value;
-    const rule = phoneRules.find(r => r.countryCode === countryCode);
+    const rule = phoneRules.find(r => r.countryCode === selectedCountryCode);
     const phone = phoneInput.value;
     let isValid = false;
 
@@ -125,7 +144,7 @@ emailInput.addEventListener('input', () => {
 document.getElementById('userForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const countryCode = countryCodeSelect.value;
+    const countryCode = selectedCountryCode;
     const phone = phoneInput.value;
     const email = emailInput.value;
     const fullPhone = countryCode + phone;
