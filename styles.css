@@ -8,3 +8,45 @@ button { margin: 10px 5px 0 0; padding: 10px; }
 .phone-container { display: flex; align-items: center; }
 .error { color: red; font-size: 0.9em; }
 .flag { width: 16px; height: 12px; margin-right: 5px; vertical-align: middle; }
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+}
+.selected {
+    padding: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.country-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    z-index: 1000;
+}
+.country-list li {
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.country-list li:hover {
+    background: #f0f0f0;
+}
+.hidden {
+    display: none;
+}
+.flag {
+    width: 16px;
+    height: 12px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
