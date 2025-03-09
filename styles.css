@@ -1,76 +1,192 @@
+/* 全局样式 */
 body {
-    font-family: Arial, sans-serif;
-    margin: 50px;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 40px;
+    color: #333;
 }
-label {
-    display: block;
-    margin: 10px 0;
+
+/* 标题 */
+h1, h2 {
+    color: #2c3e50;
+    font-weight: 500;
+    margin-bottom: 20px;
 }
-input[type="text"],
-input[type="tel"],
-input[type="email"] {
-    width: 200px;
-    padding: 5px;
+
+h1 {
+    font-size: 2em;
 }
-button {
-    margin: 10px 5px 0 0;
-    padding: 10px;
+
+h2 {
+    font-size: 1.5em;
 }
+
+/* 表单容器 */
+#userForm, #customFields {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+/* 字段容器 */
 .field-container {
     display: flex;
     align-items: center;
+    margin-bottom: 15px;
 }
-.field-container input[type="checkbox"] {
-    margin-left: 10px;
+
+.field-container label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 1em;
+    color: #555;
 }
+
+/* 输入框和选择框 */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+#newFieldName {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+#newFieldName:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+/* 电话输入区域 */
 .phone-container {
     display: flex;
     align-items: center;
+    width: 100%;
 }
-.error {
-    color: red;
-    font-size: 0.9em;
-}
-.flag {
-    width: 16px;
-    height: 12px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
+
 .dropdown {
     position: relative;
-    display: inline-block;
-    width: 150px;
+    width: 160px;
     margin-right: 10px;
 }
+
 .selected {
-    padding: 5px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
+    font-size: 0.95em;
+    transition: border-color 0.3s ease;
 }
+
+.selected:hover {
+    border-color: #3498db;
+}
+
 .country-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     position: absolute;
     width: 100%;
     max-height: 200px;
     overflow-y: auto;
-    background: white;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+
 .country-list li {
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    font-size: 0.95em;
 }
+
 .country-list li:hover {
-    background: #f0f0f0;
+    background: #ecf0f1;
 }
+
 .hidden {
     display: none;
+}
+
+.flag {
+    width: 16px;
+    height: 12px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+/* 复选框 */
+.field-container input[type="checkbox"] {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+/* 按钮 */
+button {
+    padding: 12px 20px;
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-right: 10px;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+/* 错误消息和提示 */
+.error {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+#message, #fieldMessage {
+    margin-top: 15px;
+    font-size: 1em;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#message:empty, #fieldMessage:empty {
+    display: none;
+}
+
+#message {
+    background: #dff0d8;
+    color: #3c763d;
+}
+
+#fieldMessage {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* 添加字段区域 */
+#addFieldBtn {
+    margin-top: 10px;
 }
