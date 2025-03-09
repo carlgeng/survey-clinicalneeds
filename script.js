@@ -43,18 +43,25 @@ function populateCountryCodes() {
         li.addEventListener('click', () => {
             selectedCountry.innerHTML = `<img src="${rule.flag}" class="flag">${rule.countryCode}`;
             selectedCountryCode = rule.countryCode;
-            countryList.classList.add('hidden');
+            countryList.classList.remove('visible'); // 隐藏时移除 visible
+            countryList.classList.add('hidden');    // 添加 hidden
         });
         countryList.appendChild(li);
     });
 
     selectedCountry.addEventListener('click', () => {
-        countryList.classList.toggle('hidden');
+        if (countryList.classList.contains('visible')) {
+            countryList.classList.remove('visible');
+            setTimeout(() => countryList.classList.add('hidden'), 200); // 等待动画完成再隐藏
+        } else {
+            countryList.classList.remove('hidden');
+            setTimeout(() => countryList.classList.add('visible'), 10); // 延迟添加 visible 以触发动画
+        }
     });
 
-    // Default to first country if available
+    // 默认选择第一个国家
     if (phoneRules.length > 0) {
-        selectedCountry.innerHTML = `<img src="${phoneRules[0].flag}" class="flag">${phoneRules[0].countryCode}`;
+        selectedCountry.innerHTML = `<i class="fas fa-globe"></i> <img src="${phoneRules[0].flag}" class="flag">${phoneRules[0].countryCode}`;
         selectedCountryCode = phoneRules[0].countryCode;
     }
 }
