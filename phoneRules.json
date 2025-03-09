@@ -139,4 +139,3 @@
     {"countryCode": "+1", "countryName": "特立尼达和多巴哥", "flag": "https://flagcdn.com/16x12/tt.png", "phoneLength": 10, "cityCode": "[2-9][0-9]{2}", "pattern": "^[2-9][0-9]{2}[2-9][0-9]{6}$"},
     {"countryCode": "+1", "countryName": "巴哈马", "flag": "https://flagcdn.com/16x12/bs.png", "phoneLength": 10, "cityCode": "[2-9][0-9]{2}", "pattern": "^[2-9][0-9]{2}[2-9][0-9]{6}$"}
 ]
-```
