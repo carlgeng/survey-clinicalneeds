@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' https://www.gstatic.com https://cdn.firebase.com https://*.firebasedatabase.app;
-  connect-src 'self' https://*.firebasedatabase.app wss://*.firebasedatabase.app https://raw.githubusercontent.com;
-  font-src 'self' data:;
-  img-src 'self' https://flagcdn.com;
-">
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' https://www.gstatic.com https://cdn.firebase.com https://*.firebasedatabase.app;
+      connect-src 'self' https://*.firebasedatabase.app wss://*.firebasedatabase.app https://raw.githubusercontent.com;
+      font-src 'self' data:;
+      img-src 'self' https://flagcdn.com;
+    ">
     <title>用户信息输入</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>输入用户信息</h1>
+    <h1>请输入用户信息</h1>
     <form id="userForm">
         <div id="defaultFields">
             <div class="field-container">
@@ -24,12 +24,12 @@
             <div class="field-container">
                 <label>电话: 
                     <div class="phone-container">
-    <div id="countryCodeDropdown" class="dropdown">
-        <div id="selectedCountry" class="selected">选择国家代码</div>
-        <ul id="countryList" class="country-list hidden"></ul>
-    </div>
-    <input type="tel" id="phone" required>
-</div>
+                        <div id="countryCodeDropdown" class="dropdown">
+                            <div id="selectedCountry" class="selected">选择国家代码</div>
+                            <ul id="countryList" class="country-list hidden"></ul>
+                        </div>
+                        <input type="tel" id="phone" required>
+                    </div>
                 </label>
                 <label><input type="checkbox" id="phone_onchain" checked> 上链</label>
                 <span id="phone_error" class="error"></span>
