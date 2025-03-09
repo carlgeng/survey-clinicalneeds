@@ -24,9 +24,12 @@
             <div class="field-container">
                 <label>电话: 
                     <div class="phone-container">
-                        <select id="countryCode"></select>
-                        <input type="tel" id="phone" required>
-                    </div>
+    <div id="countryCodeDropdown" class="dropdown">
+        <div id="selectedCountry" class="selected">选择国家代码</div>
+        <ul id="countryList" class="country-list hidden"></ul>
+    </div>
+    <input type="tel" id="phone" required>
+</div>
                 </label>
                 <label><input type="checkbox" id="phone_onchain" checked> 上链</label>
                 <span id="phone_error" class="error"></span>
